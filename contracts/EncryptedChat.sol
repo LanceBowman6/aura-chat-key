@@ -82,6 +82,7 @@ contract EncryptedChat is SepoliaConfig {
         require(users[msg.sender].isRegistered, "Sender not registered");
         require(users[recipient].isRegistered, "Recipient not registered");
         require(accessList[msg.sender][recipient], "No access granted");
+        require(recipient != address(0), "Invalid recipient");
         
         euint64 content = FHE.fromExternal(encryptedContent, contentProof);
         
@@ -117,6 +118,13 @@ contract EncryptedChat is SepoliaConfig {
     /// @return The number of messages
     function getMessageCount() external view returns (uint256) {
         return messages[msg.sender].length;
+    }
+
+    /// @notice Get the number of messages for a specific user
+    /// @param user The address whose messages to count
+    /// @return The number of messages for the user
+    function getMessageCountFor(address user) external view returns (uint256) {
+        return messages[user].length;
     }
     
     /// @notice Get message metadata without revealing content
