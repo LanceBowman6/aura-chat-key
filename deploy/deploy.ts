@@ -4,6 +4,8 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
+  const networkName = hre.network.name;
+  console.log(`Deploying to network: ${networkName}`);
 
   const deployedFHECounter = await deploy("FHECounter", {
     from: deployer,
