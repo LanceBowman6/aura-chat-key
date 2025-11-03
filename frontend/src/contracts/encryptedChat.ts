@@ -119,7 +119,8 @@ export function getContractAddressForChain(chainId?: number): Address | undefine
     return fromEnv('VITE_ENCRYPTED_CHAT_ADDRESS');
   };
 
-  const maybe = byChain(chainId);
+  const maybeRaw = byChain(chainId);
+  const maybe = maybeRaw?.trim();
   if (maybe && /^0x[a-fA-F0-9]{40}$/.test(maybe)) return maybe as Address;
 
   // Fallback to Hardhat default address for local development
