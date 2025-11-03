@@ -60,6 +60,11 @@ contract BidVault {
         return (b.hash, b.revealed);
     }
 
+    /// @notice Return only the committed hash for a bidder (zero if none)
+    function bidHashOf(address bidder) external view returns (bytes32) {
+        return bids[bidder].hash;
+    }
+
     /// @notice Cancel an existing commitment if not yet revealed
     function cancelCommit() external {
         Bid storage b = bids[msg.sender];
