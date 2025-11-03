@@ -158,7 +158,7 @@ contract AuraChat is SepoliaConfig {
 
     // ========== READ FUNCTIONS ==========
 
-    /// @notice Get a single message by ID
+    /// @notice Get a single message by ID (only sender or recipient can access)
     /// @param messageId The ID of the message
     /// @return sender The message sender
     /// @return recipient The message recipient
@@ -176,6 +176,12 @@ contract AuraChat is SepoliaConfig {
     ) {
         if (messageId >= totalMessages) revert InvalidMessageId();
         Message storage msg_ = messages[messageId];
+        
+        // Only sender or recipient can access message details
+        if (msg_.sender != msg.sender && msg_.recipient != msg.sender) {
+            revert NotAuthorized();
+        }
+        
         return (
             msg_.sender,
             msg_.recipient,
