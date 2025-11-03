@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const Logo = () => {
   return (
     <div className="relative flex items-center justify-center">
@@ -43,4 +45,4 @@ const Logo = () => {
   );
 };
 
-export default Logo;
+export default memo(Logo);
