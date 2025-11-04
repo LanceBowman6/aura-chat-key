@@ -10,6 +10,11 @@ plugins:
   - "@typescript-eslint"
 root: true
 rules:
+  "no-console":
+    - warn
+    - allow:
+        - warn
+        - error
   "@typescript-eslint/no-floating-promises":
     - error
     - ignoreIIFE: true
