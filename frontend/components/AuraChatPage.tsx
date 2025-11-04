@@ -50,11 +50,24 @@ export function AuraChatPage() {
   };
 
   const handleRegister = async () => {
-    if (!nicknameInput.trim()) {
+    const nickname = nicknameInput.trim();
+    if (!nickname) {
       showToast("Error", "Please enter a nickname");
       return;
     }
-    const success = await register(nicknameInput.trim());
+    
+    // Validate nickname format
+    if (nickname.length > 32) {
+      showToast("Error", "Nickname must be 32 characters or less");
+      return;
+    }
+    
+    if (!/^[a-zA-Z0-9 ]+$/.test(nickname)) {
+      showToast("Error", "Nickname can only contain letters, numbers, and spaces");
+      return;
+    }
+    
+    const success = await register(nickname);
     if (success) {
       showToast("Success", "Registration successful!");
       setNicknameInput("");
