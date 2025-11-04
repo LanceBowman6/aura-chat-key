@@ -105,6 +105,13 @@ export function useWalletAuth() {
 
   const session = useMemo(() => loadSession(), [address, isConnected]);
 
+  useEffect(() => {
+    // Proactively clear expired sessions to avoid stale UI
+    if (session && Date.now() >= session.expiresAt) {
+      clearSession();
+    }
+  }, [session]);
+
   const isSessionValidForAddress = useMemo(() => {
     if (!session || !address) return false;
     if (session.address.toLowerCase() !== address.toLowerCase()) return false;
@@ -201,4 +208,3 @@ export function useWalletAuth() {
     requireAuth,
   };
 }
-
