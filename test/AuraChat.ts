@@ -205,7 +205,7 @@ describe("AuraChat", function () {
         .to.be.revertedWithCustomError(auraChatContract, "NotRegistered");
     });
 
-    it("should reject decryption of invalid message ID", async function () {
+    it("should reject decryption of non-existent message", async function () {
       await expect(auraChatContract.connect(signers.alice).decryptMessage(999))
         .to.be.revertedWithCustomError(auraChatContract, "InvalidMessageId");
     });
