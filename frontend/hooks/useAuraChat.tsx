@@ -163,6 +163,13 @@ export const useAuraChat = (parameters: {
   // Check if recipient is registered
   const checkRecipientRegistered = useCallback(async (recipientAddress: string): Promise<boolean> => {
     if (!auraChat.address || !ethersReadonlyProvider) {
+      setMessage("Missing contract address or provider");
+      return false;
+    }
+
+    // Validate address format
+    if (!ethers.isAddress(recipientAddress)) {
+      setMessage("Invalid recipient address format");
       return false;
     }
 
@@ -173,9 +180,14 @@ export const useAuraChat = (parameters: {
         ethersReadonlyProvider
       );
 
-      return await contract.isUserRegistered(recipientAddress);
+      const isRegistered = await contract.isUserRegistered(recipientAddress);
+      if (!isRegistered) {
+        setMessage(`Recipient ${recipientAddress.slice(0, 6)}...${recipientAddress.slice(-4)} is not registered`);
+      }
+      return isRegistered;
     } catch (error) {
       console.error("[useAuraChat] checkRecipientRegistered error:", error);
+      setMessage(`Failed to check recipient registration: ${error instanceof Error ? error.message : 'Unknown error'}`);
       return false;
     }
   }, [auraChat.address, auraChat.abi, ethersReadonlyProvider]);
