@@ -45,6 +45,15 @@ const BidVaultPage = () => {
     } catch {}
   }
 
+  if (!wallet) {
+    return (
+      <div className="container mx-auto px-4 py-6 max-w-2xl">
+        <h1 className="text-2xl font-semibold mb-2">Cipher Bid Vault</h1>
+        <p className="text-sm text-muted-foreground">Connect your wallet to continue.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-6 max-w-2xl">
       <h1 className="text-2xl font-semibold mb-4">Cipher Bid Vault</h1>
