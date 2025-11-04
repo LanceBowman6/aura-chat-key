@@ -55,6 +55,7 @@ export function useFhevm(parameters: {
 
     _providerRef.current = provider;
     _chainIdRef.current = chainId;
+    _mockChainsRef.current = initialMockChains;
 
     // Nullify instance immediately
     _setInstance(undefined);
@@ -67,7 +68,7 @@ export function useFhevm(parameters: {
     }
 
     // Do not modify the running flag.
-  }, [provider, chainId]);
+  }, [provider, chainId, initialMockChains]);
 
   // Merge in main useEffect!!!
   useEffect(() => {
@@ -77,6 +78,17 @@ export function useFhevm(parameters: {
   useEffect(() => {
     _setIsRunning(enabled);
   }, [enabled]);
+
+  // Main useEffect - cleanup on unmount
+  useEffect(() => {
+    // Cleanup function to prevent memory leaks
+    return () => {
+      if (_abortControllerRef.current) {
+        _abortControllerRef.current.abort();
+        _abortControllerRef.current = null;
+      }
+    };
+  }, []);
 
   // Main useEffect
   useEffect(() => {
