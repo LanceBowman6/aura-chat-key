@@ -72,6 +72,11 @@ function useMetaMaskEthersSignerInternal(parameters: { initialMockChains?: Reado
       return;
     }
 
+    // Prevent unnecessary re-creation if signer address hasn't changed
+    if (ethersSignerRef.current && ethersSignerRef.current.address === accounts[0]) {
+      return;
+    }
+
     console.warn(`[useMetaMaskEthersSignerInternal] create new ethers.BrowserProvider(), chainId=${chainId}`);
 
     const bp: ethers.BrowserProvider = new ethers.BrowserProvider(provider);
@@ -133,7 +138,7 @@ export const MetaMaskEthersSignerProvider: React.FC<MetaMaskEthersSignerProvider
 export function useMetaMaskEthersSigner() {
   const context = useContext(MetaMaskEthersSignerContext);
   if (context === undefined) {
-    throw new Error("useMetaMaskEthersSigner must be used within a MetaMaskEthersSignerProvider");
+    throw new Error('useMetaMaskEthersSigner must be used within a MetaMaskEthersSignerProvider');
   }
   return context;
 }
