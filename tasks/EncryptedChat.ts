@@ -91,6 +91,7 @@ task("sendMessage", "Send an encrypted message in the EncryptedChat contract (de
 
 task("getMessageCount", "Get the message count for a user in the EncryptedChat contract")
   .addParam("contract", "The address of the EncryptedChat contract")
+  .addOptionalParam("user", "The address to query; defaults to signer")
   .setAction(async (taskArgs, hre) => {
     const { ethers } = hre;
     const [signer] = await ethers.getSigners();
@@ -99,8 +100,9 @@ task("getMessageCount", "Get the message count for a user in the EncryptedChat c
     const contract = EncryptedChat.attach(taskArgs.contract);
     
     try {
-      const count = await contract.getMessageCount();
-      console.log(`Message count for ${signer.address}: ${count}`);
+      const user = taskArgs.user ?? signer.address;
+      const count = await contract.getMessageCountFor(user);
+      console.log(`Message count for ${user}: ${count}`);
     } catch (error) {
       console.error("Error getting message count:", error);
     }
