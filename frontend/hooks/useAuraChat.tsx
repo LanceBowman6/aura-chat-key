@@ -192,10 +192,22 @@ export const useAuraChat = (parameters: {
     }
   }, [auraChat.address, auraChat.abi, ethersReadonlyProvider]);
 
+  // Rate limiting state
+  const lastSendTime = useRef<number>(0);
+  const SEND_COOLDOWN = 5000; // 5 seconds between sends
+
   // Send encrypted message
   const sendMessage = useCallback(async (recipientAddress: string, messageContent: string) => {
     if (!auraChat.address || !ethersSigner || !instance || !userAddress) {
       setMessage("Cannot send: missing contract, signer, or FHE instance");
+      return false;
+    }
+
+    // Rate limiting check
+    const now = Date.now();
+    if (now - lastSendTime.current < SEND_COOLDOWN) {
+      const remainingTime = Math.ceil((SEND_COOLDOWN - (now - lastSendTime.current)) / 1000);
+      setMessage(`Please wait ${remainingTime} seconds before sending another message`);
       return false;
     }
 
@@ -274,6 +286,7 @@ export const useAuraChat = (parameters: {
       }
 
       setMessage("Message sent successfully!");
+      lastSendTime.current = now; // Update last send time
       await loadMessages();
       return true;
     } catch (error: unknown) {
