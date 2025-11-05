@@ -234,6 +234,20 @@ export const useAuraChat = (parameters: {
         return false;
       }
 
+      // Validate message content
+      const trimmedMessage = messageContent.trim();
+      if (trimmedMessage.length === 0) {
+        setMessage("Message cannot be empty");
+        setIsLoading(false);
+        return false;
+      }
+      
+      if (trimmedMessage.length > 1000) {
+        setMessage("Message too long (max 1000 characters)");
+        setIsLoading(false);
+        return false;
+      }
+
       setMessage("Encrypting message with FHE...");
 
       // Allow browser to repaint before CPU-heavy FHE encryption
