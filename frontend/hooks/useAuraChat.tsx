@@ -313,6 +313,40 @@ export const useAuraChat = (parameters: {
     }
   }, [auraChat.address, auraChat.abi, ethersSigner, instance, userAddress, chainId, sameChain, sameSigner, checkRecipientRegistered]);
 
+  // Auto-refresh messages when new events are detected
+  useEffect(() => {
+    if (!auraChat.address || !ethersReadonlyProvider || !userAddress) {
+      return;
+    }
+
+    const contract = new ethers.Contract(
+      auraChat.address,
+      auraChat.abi,
+      ethersReadonlyProvider
+    );
+
+    // Listen for MessageSent events involving current user
+    const handleMessageSent = (sender: string, recipient: string, messageId: bigint) => {
+      if (sender.toLowerCase() === userAddress.toLowerCase() || 
+          recipient.toLowerCase() === userAddress.toLowerCase()) {
+        loadMessages();
+      }
+    };
+
+    // Listen for MessageDecrypted events
+    const handleMessageDecrypted = (user: string, messageId: bigint) => {
+      loadMessages();
+    };
+
+    contract.on("MessageSent", handleMessageSent);
+    contract.on("MessageDecrypted", handleMessageDecrypted);
+
+    return () => {
+      contract.off("MessageSent", handleMessageSent);
+      contract.off("MessageDecrypted", handleMessageDecrypted);
+    };
+  }, [auraChat.address, auraChat.abi, ethersReadonlyProvider, userAddress]);
+
   // Load messages for current user
   const loadMessages = useCallback(async () => {
     if (!auraChat.address || !ethersReadonlyProvider || !userAddress) {
