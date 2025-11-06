@@ -286,6 +286,8 @@ export const useFHECounter = (parameters: {
         !sameSigner.current(thisEthersSigner);
 
       try {
+        // Add small delay to prevent UI blocking
+        await new Promise(resolve => setTimeout(resolve, 50));
         const sig: FhevmDecryptionSignature | null =
           await FhevmDecryptionSignature.loadOrSign(
             instance,
