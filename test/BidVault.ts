@@ -21,6 +21,20 @@ describe("BidVault", function () {
     expect(has).to.eq(true);
   });
 
+  it("rejects reveal when hash mismatches", async function () {
+    const [alice] = await ethers.getSigners();
+    const Factory = await ethers.getContractFactory("BidVault");
+    const vault = await Factory.deploy();
+    await vault.waitForDeployment();
+
+    const amount = 10n;
+    const salt = ethers.encodeBytes32String("a");
+    const hash = ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(["uint256","bytes32"],[amount, salt]));
+    await vault.connect(alice).commitBid(hash);
+
+    await expect(vault.connect(alice).revealBid(9n, salt)).to.be.revertedWithCustomError(vault, 'HashMismatch');
+  });
+
   it("supports cancelling an active commitment", async function () {
     const [alice] = await ethers.getSigners();
     const Factory = await ethers.getContractFactory("BidVault");
