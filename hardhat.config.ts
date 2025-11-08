@@ -68,8 +68,9 @@ const config: HardhatUserConfig = {
       accounts: {
         mnemonic: MNEMONIC,
       },
-      hardfork: "cancun",
-      chainId: 31337,
+      gas: 12000000,
+      gasPrice: 20000000000,
+      blockGasLimit: 12000000,
     },
     localhost: {
       url: process.env.LOCAL_RPC_URL || "http://127.0.0.1:8545",

@@ -206,7 +206,7 @@ contract AuraChat is SepoliaConfig {
         return receivedMessages[user];
     }
 
-    /// @notice Get multiple messages at once
+    /// @notice Get multiple messages at once (only accessible to authorized users)
     /// @param messageIds Array of message IDs to fetch
     /// @return senders Array of sender addresses
     /// @return recipients Array of recipient addresses
@@ -223,6 +223,8 @@ contract AuraChat is SepoliaConfig {
         bool[] memory decryptedByRecipients
     ) {
         uint256 len = messageIds.length;
+        require(len > 0 && len <= 100, "Invalid batch size"); // Prevent DoS attacks
+        
         senders = new address[](len);
         recipients = new address[](len);
         contents = new euint32[](len);
@@ -235,6 +237,12 @@ contract AuraChat is SepoliaConfig {
             if (id >= totalMessages) revert InvalidMessageId();
             
             Message storage msg_ = messages[id];
+            
+            // Only sender or recipient can access message details
+            if (msg_.sender != msg.sender && msg_.recipient != msg.sender) {
+                revert NotAuthorized();
+            }
+            
             senders[i] = msg_.sender;
             recipients[i] = msg_.recipient;
             contents[i] = msg_.encryptedContent;
