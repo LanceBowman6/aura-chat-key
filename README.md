@@ -1,7 +1,23 @@
 # FHEVM Hardhat Template
 
-A Hardhat-based template for developing Fully Homomorphic Encryption (FHE) enabled Solidity smart contracts using the
-FHEVM protocol by Zama.
+A# aura-chat-key
+
+This project demonstrates a fully homomorphic encryption (FHE) based chat application using the FHEVM blockchain. It allows users to send encrypted messages that can only be decrypted by the intended recipients.
+
+## 🔒 Security Features
+
+- **End-to-end encryption** using FHE (Fully Homomorphic Encryption)
+- **Access control** with sender/recipient validation
+- **Rate limiting** to prevent spam attacks
+- **Input validation** for all user inputs
+- **Batch size limits** to prevent DoS attacks
+
+## 🚀 Performance Optimizations
+
+- **Memory leak prevention** with proper cleanup
+- **UI blocking prevention** during FHE operations
+- **Real-time event monitoring** for instant updates
+- **Optimized state management** with React hooks
 
 ## Quick Start
 
