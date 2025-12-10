@@ -4,7 +4,7 @@ A secure, privacy-focused chat application built with **Fully Homomorphic Encryp
 
 ## 🎥 Demo
 
-**Live Demo**: [https://aura-chat-key.vercel.app/](https://aura-chat-key.vercel.app/)
+**Live Demo**: [https://aura-chat-key-yxqbr.vercel.app/](https://aura-chat-key-yxqbr.vercel.app/)
 
 **Demo Video**:
 
